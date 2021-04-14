@@ -1,3 +1,13 @@
-import { createConnection } from 'typeorm';
+import { Connection, createConnection, getConnectionOptions } from 'typeorm';
 
-(async () => await createConnection())();
+export async function createDatabaseConnection(): Promise<Connection> {
+  const options = await getConnectionOptions();
+
+  if (process.env.NODE_ENV === "test") {
+    Object.assign(options, {
+      database: "fin_api_test"
+    })
+  }
+
+  return createConnection(options)
+}
